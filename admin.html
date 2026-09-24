@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="gu">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,13 @@
 <title>પાર્થ ઓનલાઈન CSC — Admin</title>
 
 <style>
+
 *{
   box-sizing:border-box;
 }
 
-html,body{
+html,
+body{
   margin:0;
   min-height:100%;
   font-family:Arial,"Noto Sans Gujarati",sans-serif;
@@ -227,305 +230,427 @@ button:disabled{
 }
 
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="wrap">
 
+
 <header>
-  <h1>⚙️ પાર્થ ઓનલાઈન CSC — Admin Panel</h1>
-  <p>Services • Price • Documents • Appointment</p>
+
+<h1>
+⚙️ પાર્થ ઓનલાઈન CSC — Admin Panel
+</h1>
+
+<p>
+Services • Price • Documents • Appointment
+</p>
+
 </header>
+
 
 
 <!-- ================= LOGIN ================= -->
 
-<section id="loginScreen" class="login">
+<section
+id="loginScreen"
+class="login"
+>
 
-  <div class="card">
+<div class="card">
 
-    <h2>Admin Login</h2>
+<h2>
+Admin Login
+</h2>
 
-    <div class="notice">
-      Firebase Authentication માં Email/Password provider ચાલુ હોવો જરૂરી છે.
-    </div>
+<div class="notice">
+Firebase Authentication માં Email/Password provider ચાલુ હોવો જરૂરી છે.
+</div>
 
-    <label>Email</label>
-    <input
-      id="email"
-      type="email"
-      placeholder="Admin email"
-      autocomplete="username"
-    >
 
-    <label>Password</label>
-    <input
-      id="password"
-      type="password"
-      placeholder="Password"
-      autocomplete="current-password"
-    >
+<label>
+Email
+</label>
 
-    <div class="actions">
-      <button id="loginBtn" class="primary">
-        Login
-      </button>
-    </div>
+<input
+id="email"
+type="email"
+placeholder="Admin email"
+autocomplete="username"
+>
 
-    <p id="loginMsg" class="muted"></p>
 
-  </div>
+<label>
+Password
+</label>
+
+<input
+id="password"
+type="password"
+placeholder="Password"
+autocomplete="current-password"
+>
+
+
+<div class="actions">
+
+<button
+id="loginBtn"
+class="primary"
+>
+Login
+</button>
+
+</div>
+
+
+<p
+id="loginMsg"
+class="muted"
+></p>
+
+
+</div>
 
 </section>
 
 
+
 <!-- ================= ADMIN ================= -->
 
-<main id="adminScreen" class="hidden">
+<main
+id="adminScreen"
+class="hidden"
+>
 
 
-  <!-- TOOLBAR -->
 
-  <div class="card">
+<!-- TOOLBAR -->
 
-    <div class="toolbar">
+<div class="card">
 
-      <div>
-        <b>Service Manager</b>
+<div class="toolbar">
 
-        <div class="muted">
-          Add, edit, hide/show, delete અને price બદલો.
-        </div>
-      </div>
 
+<div>
 
-      <div class="actions">
+<b>
+Service Manager
+</b>
 
-        <button id="addServiceBtn" class="primary">
-          ➕ Add Service
-        </button>
+<div class="muted">
+Add, edit, hide/show, delete અને price બદલો.
+</div>
 
-        <button id="defaultServicesBtn">
-          ↻ Default Services
-        </button>
+</div>
 
-        <button id="logoutBtn">
-          Logout
-        </button>
 
-      </div>
 
-    </div>
+<div class="actions">
 
-  </div>
 
+<button
+id="addServiceBtn"
+class="primary"
+>
+➕ Add Service
+</button>
 
-  <!-- SERVICE EDITOR -->
 
-  <div id="editor" class="card hidden">
+<button
+id="defaultServicesBtn"
+>
+↻ Default Services
+</button>
 
-    <h3 id="editorTitle">
-      નવી Service
-    </h3>
 
-    <input
-      type="hidden"
-      id="serviceId"
-    >
+<button
+id="logoutBtn"
+>
+Logout
+</button>
 
 
-    <div class="row3">
+</div>
 
-      <div>
+</div>
 
-        <label>Icon</label>
+</div>
 
-        <input
-          id="icon"
-          placeholder="🪪"
-        >
 
-      </div>
 
+<!-- SERVICE EDITOR -->
 
-      <div>
+<div
+id="editor"
+class="card hidden"
+>
 
-        <label>Service Name</label>
 
-        <input
-          id="name"
-          placeholder="આધાર મોબાઈલ Update"
-        >
+<h3
+id="editorTitle"
+>
+નવી Service
+</h3>
 
-      </div>
 
+<input
+type="hidden"
+id="serviceId"
+>
 
-      <div>
 
-        <label>Price (₹)</label>
+<div class="row3">
 
-        <input
-          id="price"
-          type="number"
-          min="0"
-          placeholder="100"
-        >
 
-      </div>
+<div>
 
-    </div>
+<label>
+Icon
+</label>
 
+<input
+id="icon"
+placeholder="🪪"
+>
 
-    <div class="row">
+</div>
 
-      <div>
 
-        <label>Description</label>
 
-        <textarea
-          id="description"
-          placeholder="સેવા વિશે માહિતી..."
-        ></textarea>
+<div>
 
-      </div>
+<label>
+Service Name
+</label>
 
+<input
+id="name"
+placeholder="આધાર મોબાઈલ Update"
+>
 
-      <div>
+</div>
 
-        <label>
-          Documents — એક lineમાં એક
-        </label>
 
-        <textarea
-          id="documents"
-          placeholder="આધાર કાર્ડ Original&#10;નવો મોબાઈલ નંબર&#10;વ્યક્તિની હાજરી જરૂરી"
-        ></textarea>
 
-      </div>
+<div>
 
-    </div>
+<label>
+Price (₹)
+</label>
 
+<input
+id="price"
+type="number"
+min="0"
+placeholder="100"
+>
 
-    <div class="row">
+</div>
 
-      <div>
 
-        <label>Note</label>
+</div>
 
-        <input
-          id="note"
-          placeholder="અંતિમ જરૂરિયાત નિયમો મુજબ બદલાઈ શકે છે."
-        >
 
-      </div>
 
+<div class="row">
 
-      <div>
 
-        <label>Sort Order</label>
+<div>
 
-        <input
-          id="sortOrder"
-          type="number"
-          value="10"
-        >
+<label>
+Description
+</label>
 
-      </div>
+<textarea
+id="description"
+placeholder="સેવા વિશે માહિતી..."
+></textarea>
 
-    </div>
+</div>
 
 
-    <div class="row">
 
-      <label>
+<div>
 
-        <input
-          id="active"
-          type="checkbox"
-          checked
-        >
+<label>
+Documents — એક lineમાં એક
+</label>
 
-        Service દેખાડવી
+<textarea
+id="documents"
+placeholder="આધાર કાર્ડ Original
+નવો મોબાઈલ નંબર
+વ્યક્તિની હાજરી જરૂરી"
+></textarea>
 
-      </label>
+</div>
 
 
-      <label>
+</div>
 
-        <input
-          id="appointmentEnabled"
-          type="checkbox"
-          checked
-        >
 
-        Appointment ચાલુ
 
-      </label>
+<div class="row">
 
-    </div>
 
+<div>
 
-    <div class="actions">
+<label>
+Note
+</label>
 
-      <button
-        id="saveBtn"
-        class="primary"
-      >
-        💾 Save
-      </button>
+<input
+id="note"
+placeholder="અંતિમ જરૂરિયાત નિયમો મુજબ બદલાઈ શકે છે."
+>
 
+</div>
 
-      <button id="cancelBtn">
-        Cancel
-      </button>
 
-    </div>
 
+<div>
 
-    <p id="saveMsg" class="muted"></p>
+<label>
+Sort Order
+</label>
 
-  </div>
+<input
+id="sortOrder"
+type="number"
+value="10"
+>
 
+</div>
 
-  <!-- SERVICE LIST -->
 
-  <div class="card">
+</div>
 
-    <div class="toolbar">
 
-      <b>તમારી Services</b>
 
-      <button id="refreshBtn">
-        ↻ Refresh
-      </button>
+<div class="row">
 
-    </div>
 
+<label>
 
-    <div id="list">
+<input
+id="active"
+type="checkbox"
+checked
+>
 
-      <div class="empty">
-        Services loading...
-      </div>
+Service દેખાડવી
 
-    </div>
+</label>
 
-  </div>
+
+
+<label>
+
+<input
+id="appointmentEnabled"
+type="checkbox"
+checked
+>
+
+Appointment ચાલુ
+
+</label>
+
+
+</div>
+
+
+
+<div class="actions">
+
+
+<button
+id="saveBtn"
+class="primary"
+>
+💾 Save
+</button>
+
+
+<button
+id="cancelBtn"
+>
+Cancel
+</button>
+
+
+</div>
+
+
+<p
+id="saveMsg"
+class="muted"
+></p>
+
+
+</div>
+
+
+
+<!-- SERVICE LIST -->
+
+<div class="card">
+
+
+<div class="toolbar">
+
+<b>
+તમારી Services
+</b>
+
+
+<button
+id="refreshBtn"
+>
+↻ Refresh
+</button>
+
+
+</div>
+
+
+<div
+id="list"
+>
+
+<div class="empty">
+Services loading...
+</div>
+
+</div>
+
+
+</div>
+
 
 
 </main>
 
+
 </div>
+
 
 
 <!-- ================= FIREBASE ================= -->
 
 <script type="module">
 
+
 import {
   initializeApp
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+}
+from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 
 
 import {
@@ -533,7 +658,9 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+}
+from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 
 import {
@@ -546,7 +673,9 @@ import {
   serverTimestamp,
   query,
   orderBy
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+}
+from
+"https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 
 
@@ -582,14 +711,18 @@ const FIREBASE_CONFIG = {
 
 
 /* =========================================
-   FIREBASE INIT
+   FIREBASE INITIALIZE
 ========================================= */
 
 const app =
-  initializeApp(FIREBASE_CONFIG);
+  initializeApp(
+    FIREBASE_CONFIG
+  );
+
 
 const auth =
   getAuth(app);
+
 
 const db =
   getFirestore(app);
@@ -597,179 +730,163 @@ const db =
 
 
 /* =========================================
-   DOM REFERENCES
+   DOM
 ========================================= */
 
 const loginScreen =
-  document.getElementById("loginScreen");
+  document.getElementById(
+    "loginScreen"
+  );
+
 
 const adminScreen =
-  document.getElementById("adminScreen");
+  document.getElementById(
+    "adminScreen"
+  );
+
 
 const emailInput =
-  document.getElementById("email");
+  document.getElementById(
+    "email"
+  );
+
 
 const passwordInput =
-  document.getElementById("password");
+  document.getElementById(
+    "password"
+  );
+
 
 const loginBtn =
-  document.getElementById("loginBtn");
+  document.getElementById(
+    "loginBtn"
+  );
+
 
 const loginMsg =
-  document.getElementById("loginMsg");
+  document.getElementById(
+    "loginMsg"
+  );
+
 
 const logoutBtn =
-  document.getElementById("logoutBtn");
+  document.getElementById(
+    "logoutBtn"
+  );
+
 
 const addServiceBtn =
-  document.getElementById("addServiceBtn");
+  document.getElementById(
+    "addServiceBtn"
+  );
+
 
 const defaultServicesBtn =
-  document.getElementById("defaultServicesBtn");
+  document.getElementById(
+    "defaultServicesBtn"
+  );
+
 
 const refreshBtn =
-  document.getElementById("refreshBtn");
+  document.getElementById(
+    "refreshBtn"
+  );
+
 
 const editor =
-  document.getElementById("editor");
+  document.getElementById(
+    "editor"
+  );
+
 
 const editorTitle =
-  document.getElementById("editorTitle");
+  document.getElementById(
+    "editorTitle"
+  );
+
 
 const serviceId =
-  document.getElementById("serviceId");
+  document.getElementById(
+    "serviceId"
+  );
+
 
 const iconInput =
-  document.getElementById("icon");
+  document.getElementById(
+    "icon"
+  );
+
 
 const nameInput =
-  document.getElementById("name");
+  document.getElementById(
+    "name"
+  );
+
 
 const priceInput =
-  document.getElementById("price");
+  document.getElementById(
+    "price"
+  );
+
 
 const descriptionInput =
-  document.getElementById("description");
+  document.getElementById(
+    "description"
+  );
+
 
 const documentsInput =
-  document.getElementById("documents");
+  document.getElementById(
+    "documents"
+  );
+
 
 const noteInput =
-  document.getElementById("note");
+  document.getElementById(
+    "note"
+  );
+
 
 const sortOrderInput =
-  document.getElementById("sortOrder");
+  document.getElementById(
+    "sortOrder"
+  );
+
 
 const activeInput =
-  document.getElementById("active");
+  document.getElementById(
+    "active"
+  );
+
 
 const appointmentInput =
-  document.getElementById("appointmentEnabled");
+  document.getElementById(
+    "appointmentEnabled"
+  );
+
 
 const saveBtn =
-  document.getElementById("saveBtn");
+  document.getElementById(
+    "saveBtn"
+  );
+
 
 const cancelBtn =
-  document.getElementById("cancelBtn");
+  document.getElementById(
+    "cancelBtn"
+  );
+
 
 const saveMsg =
-  document.getElementById("saveMsg");
+  document.getElementById(
+    "saveMsg"
+  );
+
 
 const list =
-  document.getElementById("list");
-
-
-
-/* =========================================
-   LOGIN
-========================================= */
-
-loginBtn.addEventListener("click", async () => {
-
-  const email =
-    emailInput.value.trim();
-
-  const password =
-    passwordInput.value;
-
-  loginMsg.textContent = "";
-
-  if (!email) {
-
-    loginMsg.textContent =
-      "Email નાખો.";
-
-    return;
-  }
-
-  if (!password) {
-
-    loginMsg.textContent =
-      "Password નાખો.";
-
-    return;
-  }
-
-
-  loginBtn.disabled = true;
-
-  loginBtn.textContent =
-    "Login...";
-
-
-  try {
-
-    await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
-    loginMsg.textContent =
-      "Login successful ✓";
-
-  }
-
-  catch (error) {
-
-    console.error(
-      "LOGIN ERROR:",
-      error
-    );
-
-    loginMsg.textContent =
-      "Login failed: " +
-      (error.code || "") +
-      " — " +
-      (error.message || "");
-
-  }
-
-  finally {
-
-    loginBtn.disabled = false;
-
-    loginBtn.textContent =
-      "Login";
-
-  }
-
-});
-
-
-
-/* =========================================
-   LOGOUT
-========================================= */
-
-logoutBtn.addEventListener(
-  "click",
-  async () => {
-
-    await signOut(auth);
-
-  }
-);
+  document.getElementById(
+    "list"
+  );
 
 
 
@@ -781,7 +898,7 @@ onAuthStateChanged(
   auth,
   async (user) => {
 
-    if (user) {
+    if(user){
 
       loginScreen.classList.add(
         "hidden"
@@ -794,8 +911,7 @@ onAuthStateChanged(
       await loadServices();
 
     }
-
-    else {
+    else{
 
       loginScreen.classList.remove(
         "hidden"
@@ -813,55 +929,239 @@ onAuthStateChanged(
 
 
 /* =========================================
+   LOGIN
+========================================= */
+
+loginBtn.addEventListener(
+  "click",
+  login
+);
+
+
+passwordInput.addEventListener(
+  "keydown",
+  (event) => {
+
+    if(
+      event.key === "Enter"
+    ){
+
+      login();
+
+    }
+
+  }
+);
+
+
+async function login(){
+
+  loginMsg.className =
+    "muted";
+
+  loginMsg.textContent =
+    "";
+
+
+  const email =
+    emailInput.value.trim();
+
+
+  const password =
+    passwordInput.value;
+
+
+  if(!email){
+
+    loginMsg.className =
+      "error";
+
+    loginMsg.textContent =
+      "Email નાખો.";
+
+    emailInput.focus();
+
+    return;
+
+  }
+
+
+  if(!password){
+
+    loginMsg.className =
+      "error";
+
+    loginMsg.textContent =
+      "Password નાખો.";
+
+    passwordInput.focus();
+
+    return;
+
+  }
+
+
+  loginBtn.disabled =
+    true;
+
+  loginBtn.textContent =
+    "Login...";
+
+
+  try{
+
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+
+    loginMsg.className =
+      "success";
+
+    loginMsg.textContent =
+      "Login successful ✓";
+
+  }
+  catch(error){
+
+    console.error(
+      "Firebase Login Error:",
+      error
+    );
+
+
+    loginMsg.className =
+      "error";
+
+
+    loginMsg.textContent =
+      "Login failed: " +
+      (
+        error.code ||
+        ""
+      ) +
+      " — " +
+      (
+        error.message ||
+        "Unknown error"
+      );
+
+  }
+  finally{
+
+    loginBtn.disabled =
+      false;
+
+    loginBtn.textContent =
+      "Login";
+
+  }
+
+}
+
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+logoutBtn.addEventListener(
+  "click",
+  async () => {
+
+    try{
+
+      await signOut(
+        auth
+      );
+
+    }
+    catch(error){
+
+      console.error(
+        error
+      );
+
+    }
+
+  }
+);
+
+
+
+/* =========================================
    NEW SERVICE
 ========================================= */
 
 addServiceBtn.addEventListener(
   "click",
-  () => {
-
-    editor.classList.remove(
-      "hidden"
-    );
-
-    editorTitle.textContent =
-      "નવી Service";
-
-
-    serviceId.value = "";
-
-    iconInput.value =
-      "📌";
-
-    nameInput.value =
-      "";
-
-    priceInput.value =
-      "";
-
-    descriptionInput.value =
-      "";
-
-    documentsInput.value =
-      "";
-
-    noteInput.value =
-      "";
-
-    sortOrderInput.value =
-      "10";
-
-    activeInput.checked =
-      true;
-
-    appointmentInput.checked =
-      true;
-
-    saveMsg.textContent =
-      "";
-
-  }
+  newService
 );
+
+
+function newService(){
+
+  editor.classList.remove(
+    "hidden"
+  );
+
+
+  editorTitle.textContent =
+    "નવી Service";
+
+
+  serviceId.value =
+    "";
+
+
+  iconInput.value =
+    "📌";
+
+
+  nameInput.value =
+    "";
+
+
+  priceInput.value =
+    "";
+
+
+  descriptionInput.value =
+    "";
+
+
+  documentsInput.value =
+    "";
+
+
+  noteInput.value =
+    "";
+
+
+  sortOrderInput.value =
+    "10";
+
+
+  activeInput.checked =
+    true;
+
+
+  appointmentInput.checked =
+    true;
+
+
+  saveMsg.textContent =
+    "";
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
 
 
 
@@ -895,7 +1195,7 @@ saveBtn.addEventListener(
 );
 
 
-async function saveService() {
+async function saveService(){
 
   saveMsg.className =
     "muted";
@@ -904,13 +1204,11 @@ async function saveService() {
     "";
 
 
-  /* Check login */
-
   const user =
     auth.currentUser;
 
 
-  if (!user) {
+  if(!user){
 
     saveMsg.className =
       "error";
@@ -923,13 +1221,11 @@ async function saveService() {
   }
 
 
-  /* Service name */
-
   const serviceName =
     nameInput.value.trim();
 
 
-  if (!serviceName) {
+  if(!serviceName){
 
     saveMsg.className =
       "error";
@@ -944,32 +1240,32 @@ async function saveService() {
   }
 
 
-  /* ID */
-
   let id =
     serviceId.value.trim();
 
 
-  if (!id) {
+  if(!id){
 
     id =
       serviceName
-        .toLowerCase()
-        .replace(
-          /[^a-z0-9]+/g,
-          "_"
-        )
-        .replace(
-          /^_+|_+$/g,
-          ""
-        );
+      .toLowerCase()
+      .replace(
+        /[^a-z0-9]+/g,
+        "_"
+      )
+      .replace(
+        /^_+|_+$/g,
+        ""
+      );
 
-    if (!id) {
+
+    if(!id){
 
       id =
         "service";
 
     }
+
 
     id +=
       "_" +
@@ -978,19 +1274,15 @@ async function saveService() {
   }
 
 
-  /* Button state */
-
-  const oldText =
-    saveBtn.textContent;
-
   saveBtn.disabled =
     true;
+
 
   saveBtn.textContent =
     "Saving...";
 
 
-  try {
+  try{
 
     const serviceData = {
 
@@ -1003,7 +1295,8 @@ async function saveService() {
 
       price:
         Number(
-          priceInput.value || 0
+          priceInput.value ||
+          0
         ),
 
       description:
@@ -1011,20 +1304,22 @@ async function saveService() {
 
       documents:
         documentsInput.value
-          .split("\n")
-          .map(
-            x => x.trim()
-          )
-          .filter(
-            Boolean
-          ),
+        .split("\n")
+        .map(
+          x =>
+            x.trim()
+        )
+        .filter(
+          Boolean
+        ),
 
       note:
         noteInput.value.trim(),
 
       sortOrder:
         Number(
-          sortOrderInput.value || 10
+          sortOrderInput.value ||
+          10
         ),
 
       active:
@@ -1037,13 +1332,6 @@ async function saveService() {
         serverTimestamp()
 
     };
-
-
-    console.log(
-      "Saving service:",
-      id,
-      serviceData
-    );
 
 
     await setDoc(
@@ -1059,17 +1347,11 @@ async function saveService() {
     );
 
 
-    console.log(
-      "SERVICE SAVED:",
-      id
-    );
-
-
     saveMsg.className =
       "success";
 
     saveMsg.textContent =
-      "✅ Service Saved Successfully";
+      "✅ Saved Successfully";
 
 
     await loadServices();
@@ -1082,20 +1364,15 @@ async function saveService() {
           "hidden"
         );
 
-        saveMsg.textContent =
-          "";
-
       },
       700
     );
 
-
   }
-
-  catch (error) {
+  catch(error){
 
     console.error(
-      "FIRESTORE SAVE ERROR:",
+      "Firestore Save Error:",
       error
     );
 
@@ -1106,20 +1383,24 @@ async function saveService() {
 
     saveMsg.textContent =
       "❌ Save failed: " +
-      (error.code || "") +
+      (
+        error.code ||
+        ""
+      ) +
       " — " +
-      (error.message || "Unknown error");
+      (
+        error.message ||
+        "Unknown error"
+      );
 
   }
-
-
-  finally {
+  finally{
 
     saveBtn.disabled =
       false;
 
     saveBtn.textContent =
-      oldText;
+      "💾 Save";
 
   }
 
@@ -1137,13 +1418,17 @@ refreshBtn.addEventListener(
 );
 
 
-async function loadServices() {
+async function loadServices(){
 
   list.innerHTML =
-    '<div class="empty">Services loading...</div>';
+    `
+    <div class="empty">
+      Services loading...
+    </div>
+    `;
 
 
-  try {
+  try{
 
     const q =
       query(
@@ -1158,17 +1443,25 @@ async function loadServices() {
 
 
     const snap =
-      await getDocs(q);
+      await getDocs(
+        q
+      );
 
 
     list.innerHTML =
       "";
 
 
-    if (snap.empty) {
+    if(
+      snap.empty
+    ){
 
       list.innerHTML =
-        '<div class="empty">હજુ કોઈ Service નથી.</div>';
+        `
+        <div class="empty">
+          હજી કોઈ Service નથી.
+        </div>
+        `;
 
       return;
 
@@ -1196,11 +1489,10 @@ async function loadServices() {
     );
 
   }
-
-  catch (error) {
+  catch(error){
 
     console.error(
-      "LOAD SERVICES ERROR:",
+      "Firestore Load Error:",
       error
     );
 
@@ -1209,19 +1501,19 @@ async function loadServices() {
       `
       <div class="notice">
 
-        ❌ Services load થઈ નથી.
+      ❌ Services load થઈ નથી.
 
-        <br><br>
+      <br><br>
 
-        ${escapeHtml(
-          error.code || ""
-        )}
+      ${escapeHtml(
+        error.code || ""
+      )}
 
-        <br>
+      <br>
 
-        ${escapeHtml(
-          error.message || ""
-        )}
+      ${escapeHtml(
+        error.message || ""
+      )}
 
       </div>
       `;
@@ -1238,7 +1530,7 @@ async function loadServices() {
 
 function createServiceCard(
   service
-) {
+){
 
   const item =
     document.createElement(
@@ -1272,8 +1564,17 @@ function createServiceCard(
   title.className =
     "title";
 
+
   title.textContent =
-    `${service.icon || "📌"} ${service.name || ""}`;
+    (
+      service.icon ||
+      "📌"
+    ) +
+    " " +
+    (
+      service.name ||
+      ""
+    );
 
 
   const badge =
@@ -1281,13 +1582,14 @@ function createServiceCard(
       "span"
     );
 
+
   badge.className =
     "badge";
 
 
-  if (
+  if(
     service.active === false
-  ) {
+  ){
 
     badge.classList.add(
       "off"
@@ -1297,8 +1599,7 @@ function createServiceCard(
       "Hidden";
 
   }
-
-  else {
+  else{
 
     badge.textContent =
       "Active";
@@ -1310,11 +1611,13 @@ function createServiceCard(
     title
   );
 
+
   titleArea.appendChild(
     document.createTextNode(
       " "
     )
   );
+
 
   titleArea.appendChild(
     badge
@@ -1326,13 +1629,19 @@ function createServiceCard(
       "b"
     );
 
+
   price.textContent =
-    `₹${service.price ?? 0}`;
+    "₹" +
+    (
+      service.price ??
+      0
+    );
 
 
   head.appendChild(
     titleArea
   );
+
 
   head.appendChild(
     price
@@ -1344,17 +1653,21 @@ function createServiceCard(
       "div"
     );
 
+
   desc.className =
     "muted";
 
+
   desc.textContent =
-    service.description || "";
+    service.description ||
+    "";
 
 
   const actions =
     document.createElement(
       "div"
     );
+
 
   actions.className =
     "actions";
@@ -1365,12 +1678,20 @@ function createServiceCard(
       "button"
     );
 
+
   editBtn.textContent =
     "✏️ Edit";
 
+
   editBtn.addEventListener(
     "click",
-    () => editService(service)
+    () => {
+
+      editService(
+        service
+      );
+
+    }
   );
 
 
@@ -1379,14 +1700,22 @@ function createServiceCard(
       "button"
     );
 
+
   toggleBtn.textContent =
     service.active === false
       ? "👁️ Show"
       : "🙈 Hide";
 
+
   toggleBtn.addEventListener(
     "click",
-    () => toggleService(service)
+    () => {
+
+      toggleService(
+        service
+      );
+
+    }
   );
 
 
@@ -1395,17 +1724,24 @@ function createServiceCard(
       "button"
     );
 
+
   deleteBtn.className =
     "danger";
+
 
   deleteBtn.textContent =
     "🗑️ Delete";
 
+
   deleteBtn.addEventListener(
     "click",
-    () => removeService(
-      service.id
-    )
+    () => {
+
+      removeService(
+        service.id
+      );
+
+    }
   );
 
 
@@ -1413,9 +1749,11 @@ function createServiceCard(
     editBtn
   );
 
+
   actions.appendChild(
     toggleBtn
   );
+
 
   actions.appendChild(
     deleteBtn
@@ -1426,9 +1764,11 @@ function createServiceCard(
     head
   );
 
+
   item.appendChild(
     desc
   );
+
 
   item.appendChild(
     actions
@@ -1449,7 +1789,7 @@ function createServiceCard(
 
 function editService(
   service
-) {
+){
 
   editor.classList.remove(
     "hidden"
@@ -1465,35 +1805,45 @@ function editService(
 
 
   iconInput.value =
-    service.icon || "📌";
+    service.icon ||
+    "📌";
 
 
   nameInput.value =
-    service.name || "";
+    service.name ||
+    "";
 
 
   priceInput.value =
-    service.price ?? 0;
+    service.price ??
+    0;
 
 
   descriptionInput.value =
-    service.description || "";
+    service.description ||
+    "";
 
 
   documentsInput.value =
     Array.isArray(
       service.documents
     )
-      ? service.documents.join("\n")
-      : "";
+      ?
+      service.documents.join(
+        "\n"
+      )
+      :
+      "";
 
 
   noteInput.value =
-    service.note || "";
+    service.note ||
+    "";
 
 
   sortOrderInput.value =
-    service.sortOrder ?? 10;
+    service.sortOrder ??
+    10;
 
 
   activeInput.checked =
@@ -1506,6 +1856,7 @@ function editService(
 
   saveMsg.textContent =
     "";
+
 
   window.scrollTo({
     top:0,
@@ -1522,7 +1873,7 @@ function editService(
 
 async function removeService(
   id
-) {
+){
 
   const ok =
     confirm(
@@ -1530,11 +1881,18 @@ async function removeService(
     );
 
 
-  if (!ok) {
+  if(!ok){
+
     return;
+
   }
 
 
-  try {
+  try{
 
-    awai
+    await deleteDoc(
+      doc(
+        db,
+        "services",
+        id
+ 

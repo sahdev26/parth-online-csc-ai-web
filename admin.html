@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#075e54">
+<title>પાર્થ ઓનલાઈન CSC — Admin</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Arial,"Noto Sans Gujarati",sans-serif;background:#eef3f2;color:#17211f}
+body{padding:0}.wrap{max-width:900px;margin:auto;min-height:100dvh;background:#f8fbfa}
+header{background:linear-gradient(135deg,#075e54,#128c7e);color:#fff;padding:18px 16px;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:20px}header p{margin:5px 0 0;font-size:12px;opacity:.9}
+main{padding:14px}.card{background:#fff;border-radius:16px;padding:15px;margin-bottom:14px;box-shadow:0 3px 15px #0000000c}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:90px 1fr 120px;gap:10px}
+label{font-size:12px;font-weight:700;display:block;margin:7px 0 5px}
+input,textarea,select{width:100%;padding:11px;border:1px solid #d5dedb;border-radius:10px;font:inherit;background:#fff}
+textarea{min-height:90px;resize:vertical}.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+button{border:0;border-radius:10px;padding:11px 14px;background:#e8f5f2;color:#075e54;font-weight:700;cursor:pointer}
+.primary{background:#075e54;color:#fff}.danger{background:#ffe6e6;color:#a00000}.muted{color:#66716e;font-size:12px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.item{border:1px solid #e0e7e5;border-radius:13px;padding:12px;margin:9px 0}
+.itemhead{display:flex;justify-content:space-between;gap:8px;align-items:center}.title{font-weight:800}
+.badge{padding:4px 8px;border-radius:20px;font-size:11px;font-weight:700;background:#e6f6ef;color:#075e54}.off{background:#eee;color:#777}
+.hidden{display:none}.login{max-width:430px;margin:50px auto;padding:16px}.login .card{padding:20px}
+.notice{background:#fff6d8;padding:10px;border-radius:10px;font-size:12px;margin-bottom:12px}
+@media(max-width:650px){.row,.row3{grid-template-columns:1fr}.wrap{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>⚙️ પાર્થ ઓનલાઈન CSC — Admin Panel</h1>
+  <p>Services • Price • Documents • Appointment</p>
+</header>
+
+<section id="loginScreen" class="login">
+  <div class="card">
+    <h2>Admin Login</h2>
+    <div class="notice">Firebase Authentication ચાલુ કરવા Firebase Consoleમાં Email/Password provider enable કરવો.</div>
+    <label>Email</label><input id="email" type="email" placeholder="Admin email">
+    <label>Password</label><input id="password" type="password" placeholder="Password">
+    <div class="actions"><button class="primary" onclick="login()">Login</button></div>
+    <p id="loginMsg" class="muted"></p>
+  </div>
+</section>
+
+<main id="adminScreen" class="hidden">
+  <div class="card">
+    <div class="toolbar">
+      <div><b>Service Manager</b><div class="muted">Add, edit, hide/show, delete અને price બદલો.</div></div>
+      <div class="actions">
+        <button class="primary" onclick="newService()">➕ Add Service</button>
+        <button onclick="seedDefaults()">↻ Default Services</button>
+        <button onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="editor" class="card hidden">
+    <h3 id="editorTitle">નવી Service</h3>
+    <input type="hidden" id="serviceId">
+    <div class="row3">
+      <div><label>Icon</label><input id="icon" placeholder="🪪"></div>
+      <div><label>Service Name</label><input id="name" placeholder="આધાર મોબાઈલ Update"></div>
+      <div><label>Price (₹)</label><input id="price" type="number" min="0" placeholder="100"></div>
+    </div>
+    <div class="row">
+      <div><label>Description</label><textarea id="description" placeholder="સેવા વિશે માહિતી..."></textarea></div>
+      <div><label>Documents — એક lineમાં એક</label><textarea id="documents" placeholder="આધાર કાર્ડ Original&#10;નવો મોબાઈલ નંબર&#10;વ્યક્તિની હાજરી જરૂરી"></textarea></div>
+    </div>
+    <div class="row">
+      <div><label>Note</label><input id="note" placeholder="અંતિમ જરૂરિયાત નિયમો મુજબ બદલાઈ શકે છે."></div>
+      <div><label>Sort Order</label><input id="sortOrder" type="number" value="10"></div>
+    </div>
+    <div class="row">
+      <label><input id="active" type="checkbox" checked> Service દેખાડવી</label>
+      <label><input id="appointmentEnabled" type="checkbox" checked> Appointment ચાલુ</label>
+    </div>
+    <div class="actions">
+      <button class="primary" onclick="saveService()">💾 Save</button>
+      <button onclick="cancelEdit()">Cancel</button>
+    </div>
+    <p id="saveMsg" class="muted"></p>
+  </div>
+
+  <div class="card">
+    <div class="toolbar"><b>તમારી Services</b><button onclick="loadServices()">↻ Refresh</button></div>
+    <div id="list"></div>
+  </div>
+</main>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCNOAY4KS6M1hNfwZtLM9txsCetcwKWS2Q",
+  authDomain: "parth-csc-chat-ai.firebaseapp.com",
+  projectId: "parth-csc-chat-ai",
+  storageBucket: "parth-csc-chat-ai.firebasestorage.app",
+  messagingSenderId: "986858320946",
+  appId: "1:986858320946:web:d1171991af013e8e13b82b",
+  measurementId: "G-HLC2GLQZ7N"
+};
+
+const ready = FIREBASE_CONFIG.apiKey !== "PASTE_API_KEY" && FIREBASE_CONFIG.projectId !== "PASTE_PROJECT_ID";
+let auth, db;
+
+if(ready){
+  const app=initializeApp(FIREBASE_CONFIG);
+  auth=getAuth(app); db=getFirestore(app);
+  onAuthStateChanged(auth,user=>{
+    document.getElementById("loginScreen").classList.toggle("hidden",!!user);
+    document.getElementById("adminScreen").classList.toggle("hidden",!user);
+    if(user) loadServices();
+  });
+}else{
+  document.getElementById("loginMsg").textContent="પહેલા Firebase Config નાખો.";
+}
+
+window.login=async()=>{
+  if(!ready)return;
+  try{await signInWithEmailAndPassword(auth,email.value.trim(),password.value)}
+  catch(e){loginMsg.textContent="Login failed: "+e.message}
+};
+window.logout=()=>ready&&signOut(auth);
+
+window.newService=()=>{
+  editor.classList.remove("hidden"); editorTitle.textContent="નવી Service";
+  serviceId.value=""; icon.value="📌"; name.value=""; price.value=""; description.value="";
+  documents.value=""; note.value=""; sortOrder.value="10"; active.checked=true; appointmentEnabled.checked=true; saveMsg.textContent="";
+};
+window.cancelEdit=()=>editor.classList.add("hidden");
+
+window.saveService=async()=>{
+  if(!ready){saveMsg.textContent="Firebase Config તૈયાર નથી.";return}
+  const user=auth?.currentUser;
+  if(!user){saveMsg.textContent="Login session નથી. પહેલા Logout કરીને ફરી Login કરો.";return}
+
+  const id=serviceId.value.trim() || name.value.trim().toLowerCase().replace(/[^a-z0-9]+/g,"_")+"_"+Date.now();
+  if(!name.value.trim()){saveMsg.textContent="Service name જરૂરી છે.";return}
+
+  const btn=document.querySelector('#editor .primary');
+  const oldText=btn?.textContent;
+  if(btn){btn.disabled=true;btn.textContent="Saving..."}
+
+  try{
+    await setDoc(doc(db,"services",id),{
+      icon:icon.value.trim()||"📌",
+      name:name.value.trim(),
+      price:Number(price.value||0),
+      description:description.value.trim(),
+      documents:documents.value.split("\n").map(x=>x.trim()).filter(Boolean),
+      note:note.value.trim(),
+      sortOrder:Number(sortOrder.value||10),
+      active:active.checked,
+      appointmentEnabled:appointmentEnabled.checked,
+      updatedAt:serverTimestamp()
+    },{merge:true});
+
+    saveMsg.textContent="Saved ✓";
+    await loadServices();
+    setTimeout(cancelEdit,500);
+  }catch(e){
+    console.error("Firestore Save Error:",e);
+    saveMsg.textContent="Save failed: "+(e?.code ? e.code+" — " : "")+(e?.message||"Unknown error");
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent=oldText||"💾 Save"}
+  }
+};
+
+window.editService=(s)=>{
+  editor.classList.remove("hidden"); editorTitle.textContent="Service Edit";
+  serviceId.value=s.id; icon.value=s.icon||"📌"; name.value=s.name||""; price.value=s.price??0;
+  description.value=s.description||""; documents.value=(s.documents||[]).join("\n");
+  note.value=s.note||""; sortOrder.value=s.sortOrder??10; active.checked=s.active!==false;
+  appointmentEnabled.checked=s.appointmentEnabled!==false;
+};
+window.removeService=async id=>{
+  if(!confirm("આ service delete કરવી છે?"))return;
+  await deleteDoc(doc(db,"services",id)); loadServices();
+};
+window.toggleService=async s=>{
+  await setDoc(doc(db,"services",s.id),{active:!s.active,updatedAt:serverTimestamp()},{merge:true});loadServices();
+};
+
+window.loadServices=async()=>{
+  if(!ready)return;
+  try{
+    const snap=await getDocs(query(collection(db,"services"),orderBy("sortOrder")));
+    const list=document.getElementById("list"); list.innerHTML="";
+    snap.docs.forEach(d=>{
+    const s={id:d.id,...d.data()};
+    const el=document.createElement("div");el.className="item";
+    el.innerHTML=`<div class="itemhead"><div><span class="title">${s.icon||"📌"} ${s.name||""}</span> <span class="badge ${s.active===false?"off":""}">${s.active===false?"Hidden":"Active"}</span></div><b>₹${s.price??0}</b></div>
+    <div class="muted">${s.description||""}</div>
+    <div class="actions"><button onclick='editService(${JSON.stringify(s)})'>✏️ Edit</button><button onclick='toggleService(${JSON.stringify(s)})'>${s.active===false?"👁️ Show":"🙈 Hide"}</button><button class="danger" onclick="removeService('${s.id}')">🗑️ Delete</button></div>`;
+      list.appendChild(el);
+    });
+  }catch(e){
+    console.error("Firestore Load Error:",e);
+    document.getElementById("list").innerHTML =
+      '<div class="notice">Services load થઈ નથી: '+(e?.code ? e.code+" — " : "")+(e?.message||"Unknown error")+'</div>';
+  }
+};
+
+window.seedDefaults=async()=>{
+  if(!ready)return;
+  const defaults=[
+    ["aadhaar_mobile","📱","આધાર મોબાઈલ નંબર Update",100,"આધાર મોબાઈલ નંબર Update સેવા માટે સંપર્ક કરો.",["આધાર કાર્ડ Original","નવો મોબાઈલ નંબર","વ્યક્તિની હાજરી જરૂરી"],1],
+    ["aadhaar_address","🏠","આધાર Address Update",100,"આધાર Address Update સેવા માટે સંપર્ક કરો.",["આધાર કાર્ડ Original","માન્ય Address Proof","વ્યક્તિની હાજરી જરૂરી"],2],
+    ["aadhaar_print","🖨️","આધાર Print",20,"આધાર Print સેવા માટે સંપર્ક કરો.",["આધાર નંબર / આધાર કાર્ડની માહિતી"],3],
+    ["pan_card","💳","PAN કાર્ડ",150,"PAN Card સંબંધિત સેવા.",["આધાર કાર્ડ","મોબાઈલ નંબર","જન્મ તારીખનો પુરાવો (જરૂર મુજબ)"],4],
+    ["bank_service","🏦","બેંક સેવા",0,"બેંક સંબંધિત ઓનલાઈન સેવાઓ.",["આધાર કાર્ડ","PAN કાર્ડ (જરૂર મુજબ)","મોબાઈલ નંબર"],5],
+    ["e_stamp","📄","E-Stamp",0,"E-Stamp સેવા.",["ઓળખ પુરાવો","PAN કાર્ડ (જરૂર મુજબ)","દસ્તાવેજની વિગતો"],6],
+    ["dl","🚗","DL / લાઇસન્સ",0,"Driving Licence સંબંધિત સેવા.",["આધાર કાર્ડ / ઓળખ પુરાવો","સરનામાનો પુરાવો (જરૂર મુજબ)"],7],
+    ["passport","🛂","પાસપોર્ટ",0,"Passport અરજી સંબંધિત સેવા.",["ઓળખ પુરાવો","સરનામાનો પુરાવો","જન્મ તારીખનો પુરાવો"],8],
+    ["print","🖨️","પ્રિન્ટ / ઝેરોક્ષ",0,"પ્રિન્ટ અને ઝેરોક્ષ સેવા.",[],9],
+    ["land","🏠","જમીન સેવા",0,"જમીન સંબંધિત ઓનલાઈન સેવા.",["આધાર કાર્ડ","7/12 / 8-A અથવા સંબંધિત દસ્તાવેજ"],10],
+    ["loan","💰","લોન સેવા",0,"લોન માહિતી અને અરજી સહાય.",["આધાર કાર્ડ","PAN કાર્ડ","બેંક સ્ટેટમેન્ટ","આવકનો પુરાવો"],11],
+    ["other","📱","અન્ય સેવા",0,"અન્ય ઓનલાઈન સેવાઓ માટે સંપર્ક કરો.",[],12]
+  ];
+  for(const x of defaults){
+    await setDoc(doc(db,"services",x[0]),{icon:x[1],name:x[2],price:x[3],description:x[4],documents:x[5],sortOrder:x[6],active:true,appointmentEnabled:true,updatedAt:serverTimestamp()},{merge:true});
+  }
+  loadServices();
+};
+</script>
+</body>
+</html>

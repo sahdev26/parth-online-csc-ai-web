@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#075E54">
+<title>પાર્થ ઓનલાઈન CSC</title>
+<style>
+*{box-sizing:border-box}html,body{width:100%;min-height:100%;margin:0;padding:0}body{margin:0;font-family:Arial,"Noto Sans Gujarati",sans-serif;background:#eef3f2;color:#182321;overflow-x:hidden}
+.app{width:100%;max-width:none;margin:0;min-height:100dvh;background:#f7faf9;display:flex;flex-direction:column;box-shadow:none}
+header{background:linear-gradient(135deg,#075e54,#128c7e);color:#fff;padding:18px 16px 16px;position:sticky;top:0;z-index:5}
+.head{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:14px;background:#fff2;display:grid;place-items:center;font-size:25px;border:1px solid #ffffff44}
+h1{font-size:20px;margin:0 0 3px}.sub{font-size:12px;opacity:.88}
+.chat{width:100%;padding:16px 12px calc(92px + env(safe-area-inset-bottom));flex:1;overflow-x:hidden}
+.msg{max-width:88%;padding:11px 13px;border-radius:14px;margin:9px 0;line-height:1.5;font-size:14px;box-shadow:0 1px 3px #0000000d}
+.bot{background:#fff;border-top-left-radius:4px}.user{margin-left:auto;background:#d9fdd3;border-top-right-radius:4px}
+.time{display:block;font-size:10px;color:#77817f;text-align:right;margin-top:4px}
+.card{background:#fff;border-radius:16px;padding:13px;margin:12px 0;box-shadow:0 3px 14px #0000000c;width:100%}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:10px}
+button{border:0;border-radius:12px;padding:12px 9px;background:#e8f5f2;color:#075e54;font-weight:700;cursor:pointer;font-size:13px}
+button:active{transform:scale(.98)}.wide{width:100%;margin-top:8px}
+.contact{display:flex;gap:8px}.contact button{flex:1;background:#075e54;color:#fff}
+.inputbar{position:fixed;bottom:0;left:0;transform:none;width:100%;background:#fff;padding:9px max(9px,env(safe-area-inset-left)) calc(9px + env(safe-area-inset-bottom)) max(9px,env(safe-area-inset-right));display:flex;gap:7px;border-top:1px solid #ddd;z-index:6}
+input{flex:1;border:1px solid #d5dedb;border-radius:24px;padding:12px 15px;outline:none;font-size:14px}
+.send{width:46px;border-radius:50%;padding:0;background:#075e54;color:white;font-size:18px}
+.small{font-size:12px;color:#66716e}.price{display:inline-block;background:#fff3cd;color:#7a5600;padding:6px 10px;border-radius:10px;font-weight:700;margin:8px 0}.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;padding:16px;z-index:20}.modal.show{display:flex}.modalbox{width:min(520px,100%);background:#fff;border-radius:20px;padding:18px;max-height:90vh;overflow:auto;box-shadow:0 12px 40px #0005}.modalbox h2{margin:0 0 12px;font-size:18px}.field{margin:9px 0}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}.field input,.field select{width:100%;padding:12px;border:1px solid #d5dedb;border-radius:11px;font-size:14px}.actions{display:flex;gap:8px;margin-top:12px}.actions button{flex:1}.primary{background:#075e54;color:#fff}.secondary{background:#e9eeee;color:#075e54}
+.docs{margin:8px 0 5px;padding-left:22px}.docs li{margin:5px 0;font-size:13px}
+.badge{display:inline-block;background:#e7f6f2;color:#075e54;border-radius:20px;padding:5px 9px;font-size:11px;font-weight:bold}
+</style>
+
+<!-- Firebase Dynamic Services -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCNOAY4KS6M1hNfwZtLM9txsCetcwKWS2Q",
+  authDomain: "parth-csc-chat-ai.firebaseapp.com",
+  projectId: "parth-csc-chat-ai",
+  storageBucket: "parth-csc-chat-ai.firebasestorage.app",
+  messagingSenderId: "986858320946",
+  appId: "1:986858320946:web:d1171991af013e8e13b82b",
+  measurementId: "G-HLC2GLQZ7N"
+};
+
+const firebaseReady = FIREBASE_CONFIG.apiKey !== "PASTE_API_KEY" &&
+                     FIREBASE_CONFIG.projectId !== "PASTE_PROJECT_ID";
+
+window.firestoreServices = [];
+
+window.loadFirestoreServices = async function () {
+  if (!firebaseReady) return false;
+  try {
+    const app = initializeApp(FIREBASE_CONFIG);
+    const db = getFirestore(app);
+    const q = query(collection(db, "services"), where("active", "==", true), orderBy("sortOrder"));
+    const snap = await getDocs(q);
+    window.firestoreServices = snap.docs.map(d => ({id:d.id, ...d.data()}));
+    return true;
+  } catch (e) {
+    console.warn("Firestore service loading failed:", e);
+    return false;
+  }
+};
+</script>
+
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="head">
+    <div class="logo">🏪</div>
+    <div><h1>પાર્થ ઓનલાઈન CSC</h1><div class="sub">Digital Seva • CSC • Online Services</div></div>
+  </div>
+</header>
+
+<main class="chat" id="chat">
+  <div class="msg bot">
+    <b>નમસ્કાર 🙏</b><br>
+    પાર્થ ઓનલાઈન CSC માં આપનું સ્વાગત છે.<br>
+    તમને કઈ સેવા જોઈએ તે નીચેમાંથી પસંદ કરો.
+    <span class="time">હમણાં</span>
+  </div>
+  <div class="card" id="services">
+    <span class="badge">મુખ્ય સેવાઓ</span>
+    <div class="grid">
+      <button onclick="service('aadhaar')">🪪 આધાર સેવા</button>
+      <button onclick="service('pan')">💳 PAN કાર્ડ</button>
+      <button onclick="service('bank')">🏦 બેંક સેવા</button>
+      <button onclick="service('stamp')">📄 E-Stamp</button>
+      <button onclick="service('dl')">🚗 DL / લાઇસન્સ</button>
+      <button onclick="service('passport')">🛂 પાસપોર્ટ</button>
+      <button onclick="service('print')">🖨️ પ્રિન્ટ / ઝેરોક્ષ</button>
+      <button onclick="service('land')">🏠 જમીન સેવા</button>
+      <button onclick="service('loan')">💰 લોન સેવા</button>
+      <button onclick="service('other')">📱 અન્ય સેવા</button>
+    </div>
+  </div>
+</main>
+
+<div class="inputbar">
+  <input id="input" placeholder="તમારી સેવા અથવા માહિતી લખો..." onkeydown="if(event.key==='Enter')send()">
+  <button class="send" onclick="send()">➤</button>
+</div>
+</div>
+
+<script>
+const data={
+aadhaar:{title:"🪪 આધાર સેવા",text:"આધાર માટે નીચેની સેવા પસંદ કરો:",buttons:[
+["📱 મોબાઈલ નંબર Update","Aadhaar Mobile"],["🏠 Address Update","Aadhaar Address"],["🖨️ આધાર Print","Aadhaar Print"]]},
+pan:{title:"💳 PAN કાર્ડ",price:"₹ —",text:"PAN Card સંબંધિત સેવા માટે જરૂરી દસ્તાવેજોની માહિતી:",docs:[
+"આધાર કાર્ડ",
+"મોબાઈલ નંબર",
+"જન્મ તારીખનો પુરાવો (જરૂર મુજબ)",
+"પાસપોર્ટ સાઇઝ ફોટો (જરૂર મુજબ)"
+],buttons:[]},
+bank:{title:"🏦 બેંક સેવા",price:"₹ —",text:"બેંક ખાતું/સેવા મુજબ જરૂરી દસ્તાવેજો બદલાઈ શકે છે.",docs:[
+"આધાર કાર્ડ",
+"PAN કાર્ડ (જરૂર મુજબ)",
+"મોબાઈલ નંબર",
+"પાસપોર્ટ સાઇઝ ફોટો (જરૂર મુજબ)"
+],buttons:[]},
+stamp:{title:"📄 E-Stamp",price:"₹ —",text:"E-Stamp માટે સેવા મુજબ જરૂરી વિગતો અને દસ્તાવેજો:",docs:[
+"આધાર કાર્ડ / ઓળખ પુરાવો",
+"PAN કાર્ડ (જરૂર મુજબ)",
+"પક્ષકારોની જરૂરી વિગતો",
+"દસ્તાવેજની વિગતો"
+],buttons:[]},
+dl:{title:"🚗 DL / લાઇસન્સ",price:"₹ —",text:"Driving Licence સેવા મુજબ જરૂરી દસ્તાવેજો:",docs:[
+"આધાર કાર્ડ / ઓળખ પુરાવો",
+"સરનામાનો પુરાવો (જરૂર મુજબ)",
+"જન્મ તારીખનો પુરાવો (જરૂર મુજબ)",
+"પાસપોર્ટ સાઇઝ ફોટો (જરૂર મુજબ)"
+],buttons:[]},
+passport:{title:"🛂 પાસપોર્ટ",price:"₹ —",text:"Passport અરજી માટે સામાન્ય રીતે જરૂરી દસ્તાવેજો:",docs:[
+"આધાર કાર્ડ / અન્ય ઓળખ પુરાવો",
+"સરનામાનો પુરાવો",
+"જન્મ તારીખનો પુરાવો (જરૂર મુજબ)",
+"અન્ય દસ્તાવેજો અરજીના પ્રકાર મુજબ"
+],buttons:[]},
+print:{title:"🖨️ પ્રિન્ટ / ઝેરોક્ષ",price:"₹ —",text:"પ્રિન્ટ, ઝેરોક્ષ અને ડિજિટલ ડોક્યુમેન્ટ સેવાઓ ઉપલબ્ધ છે.",docs:[],buttons:[]},
+land:{title:"🏠 જમીન સેવા",price:"₹ —",text:"જમીન સંબંધિત સેવા મુજબ જરૂરી દસ્તાવેજો બદલાઈ શકે છે.",docs:[
+"આધાર કાર્ડ",
+"7/12 / 8-A અથવા સંબંધિત જમીન દસ્તાવેજ",
+"જમીનની જરૂરી વિગતો",
+"મોબાઈલ નંબર"
+],buttons:[]},
+loan:{title:"💰 લોન સેવા",price:"₹ —",text:"લોનના પ્રકાર અને બેંક મુજબ દસ્તાવેજો બદલાય છે.",docs:[
+"આધાર કાર્ડ",
+"PAN કાર્ડ",
+"બેંક સ્ટેટમેન્ટ",
+"આવકનો પુરાવો",
+"ફોટો"
+],buttons:[]},
+other:{title:"📱 અન્ય ઓનલાઈન સેવા",price:"₹ —",text:"તમને કઈ ઓનલાઈન સેવા જોઈએ તે મેસેજમાં લખો. જરૂરી દસ્તાવેજોની માહિતી સેવા મુજબ આપવામાં આવશે.",docs:[],buttons:[]}
+};
+
+function add(text,type='bot'){
+ const chat=document.getElementById('chat');
+ const d=document.createElement('div'); d.className='msg '+type;
+ d.innerHTML=text+'<span class="time">હમણાં</span>';
+ chat.appendChild(d); window.scrollTo(0,document.body.scrollHeight);
+}
+function buttons(arr){
+ const chat=document.getElementById('chat');
+ const c=document.createElement('div'); c.className='card';
+ arr.forEach(([label,val])=>{
+   const b=document.createElement('button'); b.className='wide'; b.textContent=label;
+   b.onclick=()=>detail(val); c.appendChild(b);
+ });
+ const home=document.createElement('button'); home.className='wide'; home.textContent='🏠 મુખ્ય સેવાઓ'; home.onclick=homeScreen;c.appendChild(home);
+ chat.appendChild(c);window.scrollTo(0,document.body.scrollHeight);
+}
+function service(key){
+ const x=data[key]; window.currentService=x.title; add(x.title,'user'); setTimeout(()=>{
+   let response='<b>'+x.title+'</b><br>';
+   if(x.price) response+='<div class="price">💰 સેવા ચાર્જ: '+x.price+'</div><br>';
+   response+=x.text;
+   if(x.docs && x.docs.length){
+     response+='<br><br><b>📋 જરૂરી દસ્તાવેજો:</b><ul class="docs">';
+     x.docs.forEach(d=>response+='<li>✅ '+d+'</li>');
+     response+='</ul><span class="small">⚠️ અંતિમ દસ્તાવેજો સેવા/અરજીના પ્રકાર મુજબ બદલાઈ શકે છે.</span>';
+   }
+   add(response);
+   if(x.buttons.length) buttons(x.buttons);
+   else buttons([['📞 Call: 9904647651','call'],['📅 Appointment લો','appointment'],['💬 WhatsApp પર સંપર્ક કરો','whatsapp']]);
+ },250);
+}
+function detail(v){
+ if(v==='call'){location.href='tel:9904647651';return}
+ if(v==='whatsapp'){location.href='https://wa.me/919904647651';return}
+ if(v==='appointment'){openAppointment(window.currentService || 'CSC સેવા');return}
+ const map={
+ 'Aadhaar Mobile':{
+   title:'📱 આધાર મોબાઈલ નંબર Update', price:'₹ —',
+   docs:['આધાર કાર્ડ Original','નવો મોબાઈલ નંબર','વ્યક્તિની હાજરી જરૂરી']
+ },
+ 'Aadhaar Address':{
+   title:'🏠 આધાર Address Update', price:'₹ —',
+   docs:['આધાર કાર્ડ Original','માન્ય Address Proof','વ્યક્તિની હાજરી જરૂરી']
+ },
+ 'Aadhaar Print':{
+   title:'🖨️ આધાર Print', price:'₹ —',
+   docs:['આધાર નંબર / આધાર કાર્ડની માહિતી','મોબાઈલ OTP માટે રજીસ્ટર્ડ મોબાઈલ (જરૂર મુજબ)']
+ }
+ };
+ const x=map[v];
+ window.currentService=x.title;
+ add(v,'user');
+ setTimeout(()=>{
+   let response='<b>'+x.title+'</b><br><div class="price">💰 સેવા ચાર્જ: '+x.price+'</div><br><b>📋 જરૂરી દસ્તાવેજો:</b><ul class="docs">';
+   x.docs.forEach(d=>response+='<li>✅ '+d+'</li>');
+   response+='</ul><span class="small">⚠️ અંતિમ જરૂરિયાત સેવા/અરજીના નિયમો મુજબ બદલાઈ શકે છે.</span>';
+   add(response);
+   buttons([['📞 Call: 9904647651','call'],['📅 Appointment લો','appointment'],['💬 WhatsApp પર સંપર્ક કરો','whatsapp']]);
+ },250);
+}
+function homeScreen(){add('🏠 મુખ્ય સેવાઓ','user');setTimeout(()=>location.reload(),150)}
+function send(){
+ const i=document.getElementById('input'),t=i.value.trim();if(!t)return;
+ add(t,'user');i.value='';
+ setTimeout(()=>{add('તમારી વિનંતી મળી. કૃપા કરીને નીચેની સેવાઓમાંથી યોગ્ય સેવા પસંદ કરો અથવા <b>9904647651</b> પર સંપર્ક કરો.');},250);
+}
+
+let appointmentService='';
+
+function openAppointment(serviceName){
+  appointmentService = serviceName || appointmentService || 'CSC સેવા';
+  document.getElementById('apService').value=appointmentService;
+  const d=new Date(); d.setDate(d.getDate()+1);
+  document.getElementById('apDate').min=new Date().toISOString().split('T')[0];
+  document.getElementById('apDate').value=d.toISOString().split('T')[0];
+  document.getElementById('appointmentModal').classList.add('show');
+}
+function closeAppointment(){document.getElementById('appointmentModal').classList.remove('show')}
+function submitAppointment(){
+  const name=document.getElementById('apName').value.trim();
+  const phone=document.getElementById('apPhone').value.trim();
+  const date=document.getElementById('apDate').value;
+  const time=document.getElementById('apTime').value;
+  if(!name || !/^\d{10}$/.test(phone) || !date || !time){alert('નામ, 10 અંકનો મોબાઈલ, તારીખ અને સમય ભરો.');return}
+  const niceDate=new Date(date+'T00:00:00').toLocaleDateString('gu-IN',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const text=`પાર્થ ઓનલાઈન CSC Appointment Request\n\nસેવા: ${appointmentService}\nનામ: ${name}\nમોબાઈલ: ${phone}\nતારીખ: ${niceDate}\nસમય: ${time}\n\nકૃપા કરીને Appointment confirm કરશો.`;
+  window.open('https://wa.me/919904647651?text='+encodeURIComponent(text),'_blank');
+  closeAppointment();
+}
+
+</script>
+
+<div class="modal" id="appointmentModal" onclick="if(event.target===this)closeAppointment()">
+  <div class="modalbox">
+    <h2>📅 Appointment બુક કરો</h2>
+    <div class="small">હાલમાં આ request WhatsApp પર મોકલાશે. Firebase જોડ્યા પછી અહીંથી real slot management અને confirmation કરી શકીશું.</div>
+    <div class="field"><label>સેવા</label><input id="apService" readonly></div>
+    <div class="field"><label>તમારું નામ</label><input id="apName" placeholder="નામ" required></div>
+    <div class="field"><label>મોબાઈલ નંબર</label><input id="apPhone" type="tel" maxlength="10" placeholder="10 અંકનો મોબાઈલ નંબર" required></div>
+    <div class="field"><label>તારીખ</label><input id="apDate" type="date" required></div>
+    <div class="field"><label>સમય</label>
+      <select id="apTime">
+        <option value="">સમય પસંદ કરો</option>
+        <option>09:00 AM</option><option>10:00 AM</option><option>11:00 AM</option>
+        <option>12:00 PM</option><option>01:00 PM</option><option>02:00 PM</option>
+        <option>03:30 PM</option><option>04:30 PM</option><option>05:30 PM</option>
+        <option>06:00 PM</option><option>07:00 PM</option>
+      </select>
+    </div>
+    <div class="actions">
+      <button class="secondary" onclick="closeAppointment()">રદ કરો</button>
+      <button class="primary" onclick="submitAppointment()">WhatsApp પર Request મોકલો</button>
+    </div>
+  </div>
+</div>
+
+<script>
+async function renderDynamicServices(){
+  if(typeof window.loadFirestoreServices !== "function") return;
+  const ok = await window.loadFirestoreServices();
+  if(!ok || !window.firestoreServices.length) return;
+
+  const host = document.getElementById("services");
+  if(!host) return;
+
+  const grid = host.querySelector(".grid");
+  if(!grid) return;
+  grid.innerHTML = "";
+
+  window.firestoreServices.forEach(s => {
+    const b = document.createElement("button");
+    b.innerHTML = `${s.icon || "📌"} ${s.name || "Service"}`;
+    b.onclick = () => showDynamicService(s);
+    grid.appendChild(b);
+  });
+}
+
+function showDynamicService(s){
+  window.currentService = s.name || "CSC સેવા";
+  add(s.name || "CSC સેવા", "user");
+  setTimeout(() => {
+    let response = `<b>${s.icon || "📌"} ${s.name || "CSC સેવા"}</b><br>`;
+    if(s.price !== undefined && s.price !== null && String(s.price).trim() !== "")
+      response += `<div class="price">💰 સેવા ચાર્જ: ₹${s.price}</div><br>`;
+    response += s.description || "";
+    if(Array.isArray(s.documents) && s.documents.length){
+      response += `<br><br><b>📋 જરૂરી દસ્તાવેજો:</b><ul class="docs">`;
+      s.documents.forEach(d => response += `<li>✅ ${d}</li>`);
+      response += `</ul>`;
+    }
+    if(s.note) response += `<br><span class="small">⚠️ ${s.note}</span>`;
+
+    add(response);
+
+    const arr = [
+      ["📞 Call: 9904647651","call"],
+      ...(s.appointmentEnabled !== false ? [["📅 Appointment લો","appointment"]] : []),
+      ["💬 WhatsApp પર સંપર્ક કરો","whatsapp"]
+    ];
+    buttons(arr);
+  }, 200);
+}
+
+window.addEventListener("DOMContentLoaded", renderDynamicServices);
+</script>
+
+</body>
+</html>

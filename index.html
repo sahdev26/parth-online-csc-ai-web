@@ -1,325 +1,317 @@
 <!DOCTYPE html>
 <html lang="gu">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#075E54">
-<title>પાર્થ ઓનલાઈન CSC</title>
-<style>
-*{box-sizing:border-box}html,body{width:100%;min-height:100%;margin:0;padding:0}body{margin:0;font-family:Arial,"Noto Sans Gujarati",sans-serif;background:#eef3f2;color:#182321;overflow-x:hidden}
-.app{width:100%;max-width:none;margin:0;min-height:100dvh;background:#f7faf9;display:flex;flex-direction:column;box-shadow:none}
-header{background:linear-gradient(135deg,#075e54,#128c7e);color:#fff;padding:18px 16px 16px;position:sticky;top:0;z-index:5}
-.head{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:14px;background:#fff2;display:grid;place-items:center;font-size:25px;border:1px solid #ffffff44}
-h1{font-size:20px;margin:0 0 3px}.sub{font-size:12px;opacity:.88}
-.chat{width:100%;padding:16px 12px calc(92px + env(safe-area-inset-bottom));flex:1;overflow-x:hidden}
-.msg{max-width:88%;padding:11px 13px;border-radius:14px;margin:9px 0;line-height:1.5;font-size:14px;box-shadow:0 1px 3px #0000000d}
-.bot{background:#fff;border-top-left-radius:4px}.user{margin-left:auto;background:#d9fdd3;border-top-right-radius:4px}
-.time{display:block;font-size:10px;color:#77817f;text-align:right;margin-top:4px}
-.card{background:#fff;border-radius:16px;padding:13px;margin:12px 0;box-shadow:0 3px 14px #0000000c;width:100%}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:10px}
-button{border:0;border-radius:12px;padding:12px 9px;background:#e8f5f2;color:#075e54;font-weight:700;cursor:pointer;font-size:13px}
-button:active{transform:scale(.98)}.wide{width:100%;margin-top:8px}
-.contact{display:flex;gap:8px}.contact button{flex:1;background:#075e54;color:#fff}
-.inputbar{position:fixed;bottom:0;left:0;transform:none;width:100%;background:#fff;padding:9px max(9px,env(safe-area-inset-left)) calc(9px + env(safe-area-inset-bottom)) max(9px,env(safe-area-inset-right));display:flex;gap:7px;border-top:1px solid #ddd;z-index:6}
-input{flex:1;border:1px solid #d5dedb;border-radius:24px;padding:12px 15px;outline:none;font-size:14px}
-.send{width:46px;border-radius:50%;padding:0;background:#075e54;color:white;font-size:18px}
-.small{font-size:12px;color:#66716e}.price{display:inline-block;background:#fff3cd;color:#7a5600;padding:6px 10px;border-radius:10px;font-weight:700;margin:8px 0}.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;padding:16px;z-index:20}.modal.show{display:flex}.modalbox{width:min(520px,100%);background:#fff;border-radius:20px;padding:18px;max-height:90vh;overflow:auto;box-shadow:0 12px 40px #0005}.modalbox h2{margin:0 0 12px;font-size:18px}.field{margin:9px 0}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}.field input,.field select{width:100%;padding:12px;border:1px solid #d5dedb;border-radius:11px;font-size:14px}.actions{display:flex;gap:8px;margin-top:12px}.actions button{flex:1}.primary{background:#075e54;color:#fff}.secondary{background:#e9eeee;color:#075e54}
-.docs{margin:8px 0 5px;padding-left:22px}.docs li{margin:5px 0;font-size:13px}
-.badge{display:inline-block;background:#e7f6f2;color:#075e54;border-radius:20px;padding:5px 9px;font-size:11px;font-weight:bold}
-</style>
-
-<!-- Firebase Dynamic Services -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyCNOAY4KS6M1hNfwZtLM9txsCetcwKWS2Q",
-  authDomain: "parth-csc-chat-ai.firebaseapp.com",
-  projectId: "parth-csc-chat-ai",
-  storageBucket: "parth-csc-chat-ai.firebasestorage.app",
-  messagingSenderId: "986858320946",
-  appId: "1:986858320946:web:d1171991af013e8e13b82b",
-  measurementId: "G-HLC2GLQZ7N"
-};
-
-const firebaseReady = FIREBASE_CONFIG.apiKey !== "PASTE_API_KEY" &&
-                     FIREBASE_CONFIG.projectId !== "PASTE_PROJECT_ID";
-
-window.firestoreServices = [];
-
-window.loadFirestoreServices = async function () {
-  if (!firebaseReady) return false;
-  try {
-    const app = initializeApp(FIREBASE_CONFIG);
-    const db = getFirestore(app);
-    const q = query(collection(db, "services"), where("active", "==", true), orderBy("sortOrder"));
-    const snap = await getDocs(q);
-    window.firestoreServices = snap.docs.map(d => ({id:d.id, ...d.data()}));
-    return true;
-  } catch (e) {
-    console.warn("Firestore service loading failed:", e);
-    return false;
-  }
-};
-</script>
-
-</head>
-<body>
-<div class="app">
-<header>
-  <div class="head">
-    <div class="logo">🏪</div>
-    <div><h1>પાર્થ ઓનલાઈન CSC</h1><div class="sub">Digital Seva • CSC • Online Services</div></div>
-  </div>
-</header>
-
-<main class="chat" id="chat">
-  <div class="msg bot">
-    <b>નમસ્કાર 🙏</b><br>
-    પાર્થ ઓનલાઈન CSC માં આપનું સ્વાગત છે.<br>
-    તમને કઈ સેવા જોઈએ તે નીચેમાંથી પસંદ કરો.
-    <span class="time">હમણાં</span>
-  </div>
-  <div class="card" id="services">
-    <span class="badge">મુખ્ય સેવાઓ</span>
-    <div class="grid">
-      <button onclick="service('aadhaar')">🪪 આધાર સેવા</button>
-      <button onclick="service('pan')">💳 PAN કાર્ડ</button>
-      <button onclick="service('bank')">🏦 બેંક સેવા</button>
-      <button onclick="service('stamp')">📄 E-Stamp</button>
-      <button onclick="service('dl')">🚗 DL / લાઇસન્સ</button>
-      <button onclick="service('passport')">🛂 પાસપોર્ટ</button>
-      <button onclick="service('print')">🖨️ પ્રિન્ટ / ઝેરોક્ષ</button>
-      <button onclick="service('land')">🏠 જમીન સેવા</button>
-      <button onclick="service('loan')">💰 લોન સેવા</button>
-      <button onclick="service('other')">📱 અન્ય સેવા</button>
-    </div>
-  </div>
-</main>
-
-<div class="inputbar">
-  <input id="input" placeholder="તમારી સેવા અથવા માહિતી લખો..." onkeydown="if(event.key==='Enter')send()">
-  <button class="send" onclick="send()">➤</button>
-</div>
-</div>
-
-<script>
-const data={
-aadhaar:{title:"🪪 આધાર સેવા",text:"આધાર માટે નીચેની સેવા પસંદ કરો:",buttons:[
-["📱 મોબાઈલ નંબર Update","Aadhaar Mobile"],["🏠 Address Update","Aadhaar Address"],["🖨️ આધાર Print","Aadhaar Print"]]},
-pan:{title:"💳 PAN કાર્ડ",price:"₹ —",text:"PAN Card સંબંધિત સેવા માટે જરૂરી દસ્તાવેજોની માહિતી:",docs:[
-"આધાર કાર્ડ",
-"મોબાઈલ નંબર",
-"જન્મ તારીખનો પુરાવો (જરૂર મુજબ)",
-"પાસપોર્ટ સાઇઝ ફોટો (જરૂર મુજબ)"
-],buttons:[]},
-bank:{title:"🏦 બેંક સેવા",price:"₹ —",text:"બેંક ખાતું/સેવા મુજબ જરૂરી દસ્તાવેજો બદલાઈ શકે છે.",docs:[
-"આધાર કાર્ડ",
-"PAN કાર્ડ (જરૂર મુજબ)",
-"મોબાઈલ નંબર",
-"પાસપોર્ટ સાઇઝ ફોટો (જરૂર મુજબ)"
-],buttons:[]},
-stamp:{title:"📄 E-Stamp",price:"₹ —",text:"E-Stamp માટે સેવા મુજબ જરૂરી વિગતો અને દસ્તાવેજો:",docs:[
-"આધાર કાર્ડ / ઓળખ પુરાવો",
-"PAN કાર્ડ (જરૂર મુજબ)",
-"પક્ષકારોની જરૂરી વિગતો",
-"દસ્તાવેજની વિગતો"
-],buttons:[]},
-dl:{title:"🚗 DL / લાઇસન્સ",price:"₹ —",text:"Driving Licence સેવા મુજબ જરૂરી દસ્તાવેજો:",docs:[
-"આધાર કાર્ડ / ઓળખ પુરાવો",
-"સરનામાનો પુરાવો (જરૂર મુજબ)",
-"જન્મ તારીખનો પુરાવો (જરૂર મુજબ)",
-"પાસપોર્ટ સાઇઝ ફોટો (જરૂર મુજબ)"
-],buttons:[]},
-passport:{title:"🛂 પાસપોર્ટ",price:"₹ —",text:"Passport અરજી માટે સામાન્ય રીતે જરૂરી દસ્તાવેજો:",docs:[
-"આધાર કાર્ડ / અન્ય ઓળખ પુરાવો",
-"સરનામાનો પુરાવો",
-"જન્મ તારીખનો પુરાવો (જરૂર મુજબ)",
-"અન્ય દસ્તાવેજો અરજીના પ્રકાર મુજબ"
-],buttons:[]},
-print:{title:"🖨️ પ્રિન્ટ / ઝેરોક્ષ",price:"₹ —",text:"પ્રિન્ટ, ઝેરોક્ષ અને ડિજિટલ ડોક્યુમેન્ટ સેવાઓ ઉપલબ્ધ છે.",docs:[],buttons:[]},
-land:{title:"🏠 જમીન સેવા",price:"₹ —",text:"જમીન સંબંધિત સેવા મુજબ જરૂરી દસ્તાવેજો બદલાઈ શકે છે.",docs:[
-"આધાર કાર્ડ",
-"7/12 / 8-A અથવા સંબંધિત જમીન દસ્તાવેજ",
-"જમીનની જરૂરી વિગતો",
-"મોબાઈલ નંબર"
-],buttons:[]},
-loan:{title:"💰 લોન સેવા",price:"₹ —",text:"લોનના પ્રકાર અને બેંક મુજબ દસ્તાવેજો બદલાય છે.",docs:[
-"આધાર કાર્ડ",
-"PAN કાર્ડ",
-"બેંક સ્ટેટમેન્ટ",
-"આવકનો પુરાવો",
-"ફોટો"
-],buttons:[]},
-other:{title:"📱 અન્ય ઓનલાઈન સેવા",price:"₹ —",text:"તમને કઈ ઓનલાઈન સેવા જોઈએ તે મેસેજમાં લખો. જરૂરી દસ્તાવેજોની માહિતી સેવા મુજબ આપવામાં આવશે.",docs:[],buttons:[]}
-};
-
-function add(text,type='bot'){
- const chat=document.getElementById('chat');
- const d=document.createElement('div'); d.className='msg '+type;
- d.innerHTML=text+'<span class="time">હમણાં</span>';
- chat.appendChild(d); window.scrollTo(0,document.body.scrollHeight);
-}
-function buttons(arr){
- const chat=document.getElementById('chat');
- const c=document.createElement('div'); c.className='card';
- arr.forEach(([label,val])=>{
-   const b=document.createElement('button'); b.className='wide'; b.textContent=label;
-   b.onclick=()=>detail(val); c.appendChild(b);
- });
- const home=document.createElement('button'); home.className='wide'; home.textContent='🏠 મુખ્ય સેવાઓ'; home.onclick=homeScreen;c.appendChild(home);
- chat.appendChild(c);window.scrollTo(0,document.body.scrollHeight);
-}
-function service(key){
- const x=data[key]; window.currentService=x.title; add(x.title,'user'); setTimeout(()=>{
-   let response='<b>'+x.title+'</b><br>';
-   if(x.price) response+='<div class="price">💰 સેવા ચાર્જ: '+x.price+'</div><br>';
-   response+=x.text;
-   if(x.docs && x.docs.length){
-     response+='<br><br><b>📋 જરૂરી દસ્તાવેજો:</b><ul class="docs">';
-     x.docs.forEach(d=>response+='<li>✅ '+d+'</li>');
-     response+='</ul><span class="small">⚠️ અંતિમ દસ્તાવેજો સેવા/અરજીના પ્રકાર મુજબ બદલાઈ શકે છે.</span>';
-   }
-   add(response);
-   if(x.buttons.length) buttons(x.buttons);
-   else buttons([['📞 Call: 9904647651','call'],['📅 Appointment લો','appointment'],['💬 WhatsApp પર સંપર્ક કરો','whatsapp']]);
- },250);
-}
-function detail(v){
- if(v==='call'){location.href='tel:9904647651';return}
- if(v==='whatsapp'){location.href='https://wa.me/919904647651';return}
- if(v==='appointment'){openAppointment(window.currentService || 'CSC સેવા');return}
- const map={
- 'Aadhaar Mobile':{
-   title:'📱 આધાર મોબાઈલ નંબર Update', price:'₹ —',
-   docs:['આધાર કાર્ડ Original','નવો મોબાઈલ નંબર','વ્યક્તિની હાજરી જરૂરી']
- },
- 'Aadhaar Address':{
-   title:'🏠 આધાર Address Update', price:'₹ —',
-   docs:['આધાર કાર્ડ Original','માન્ય Address Proof','વ્યક્તિની હાજરી જરૂરી']
- },
- 'Aadhaar Print':{
-   title:'🖨️ આધાર Print', price:'₹ —',
-   docs:['આધાર નંબર / આધાર કાર્ડની માહિતી','મોબાઈલ OTP માટે રજીસ્ટર્ડ મોબાઈલ (જરૂર મુજબ)']
- }
- };
- const x=map[v];
- window.currentService=x.title;
- add(v,'user');
- setTimeout(()=>{
-   let response='<b>'+x.title+'</b><br><div class="price">💰 સેવા ચાર્જ: '+x.price+'</div><br><b>📋 જરૂરી દસ્તાવેજો:</b><ul class="docs">';
-   x.docs.forEach(d=>response+='<li>✅ '+d+'</li>');
-   response+='</ul><span class="small">⚠️ અંતિમ જરૂરિયાત સેવા/અરજીના નિયમો મુજબ બદલાઈ શકે છે.</span>';
-   add(response);
-   buttons([['📞 Call: 9904647651','call'],['📅 Appointment લો','appointment'],['💬 WhatsApp પર સંપર્ક કરો','whatsapp']]);
- },250);
-}
-function homeScreen(){add('🏠 મુખ્ય સેવાઓ','user');setTimeout(()=>location.reload(),150)}
-function send(){
- const i=document.getElementById('input'),t=i.value.trim();if(!t)return;
- add(t,'user');i.value='';
- setTimeout(()=>{add('તમારી વિનંતી મળી. કૃપા કરીને નીચેની સેવાઓમાંથી યોગ્ય સેવા પસંદ કરો અથવા <b>9904647651</b> પર સંપર્ક કરો.');},250);
-}
-
-let appointmentService='';
-
-function openAppointment(serviceName){
-  appointmentService = serviceName || appointmentService || 'CSC સેવા';
-  document.getElementById('apService').value=appointmentService;
-  const d=new Date(); d.setDate(d.getDate()+1);
-  document.getElementById('apDate').min=new Date().toISOString().split('T')[0];
-  document.getElementById('apDate').value=d.toISOString().split('T')[0];
-  document.getElementById('appointmentModal').classList.add('show');
-}
-function closeAppointment(){document.getElementById('appointmentModal').classList.remove('show')}
-function submitAppointment(){
-  const name=document.getElementById('apName').value.trim();
-  const phone=document.getElementById('apPhone').value.trim();
-  const date=document.getElementById('apDate').value;
-  const time=document.getElementById('apTime').value;
-  if(!name || !/^\d{10}$/.test(phone) || !date || !time){alert('નામ, 10 અંકનો મોબાઈલ, તારીખ અને સમય ભરો.');return}
-  const niceDate=new Date(date+'T00:00:00').toLocaleDateString('gu-IN',{day:'2-digit',month:'2-digit',year:'numeric'});
-  const text=`પાર્થ ઓનલાઈન CSC Appointment Request\n\nસેવા: ${appointmentService}\nનામ: ${name}\nમોબાઈલ: ${phone}\nતારીખ: ${niceDate}\nસમય: ${time}\n\nકૃપા કરીને Appointment confirm કરશો.`;
-  window.open('https://wa.me/919904647651?text='+encodeURIComponent(text),'_blank');
-  closeAppointment();
-}
-
-</script>
-
-<div class="modal" id="appointmentModal" onclick="if(event.target===this)closeAppointment()">
-  <div class="modalbox">
-    <h2>📅 Appointment બુક કરો</h2>
-    <div class="small">હાલમાં આ request WhatsApp પર મોકલાશે. Firebase જોડ્યા પછી અહીંથી real slot management અને confirmation કરી શકીશું.</div>
-    <div class="field"><label>સેવા</label><input id="apService" readonly></div>
-    <div class="field"><label>તમારું નામ</label><input id="apName" placeholder="નામ" required></div>
-    <div class="field"><label>મોબાઈલ નંબર</label><input id="apPhone" type="tel" maxlength="10" placeholder="10 અંકનો મોબાઈલ નંબર" required></div>
-    <div class="field"><label>તારીખ</label><input id="apDate" type="date" required></div>
-    <div class="field"><label>સમય</label>
-      <select id="apTime">
-        <option value="">સમય પસંદ કરો</option>
-        <option>09:00 AM</option><option>10:00 AM</option><option>11:00 AM</option>
-        <option>12:00 PM</option><option>01:00 PM</option><option>02:00 PM</option>
-        <option>03:30 PM</option><option>04:30 PM</option><option>05:30 PM</option>
-        <option>06:00 PM</option><option>07:00 PM</option>
-      </select>
-    </div>
-    <div class="actions">
-      <button class="secondary" onclick="closeAppointment()">રદ કરો</button>
-      <button class="primary" onclick="submitAppointment()">WhatsApp પર Request મોકલો</button>
-    </div>
-  </div>
-</div>
-
-<script>
-async function renderDynamicServices(){
-  if(typeof window.loadFirestoreServices !== "function") return;
-  const ok = await window.loadFirestoreServices();
-  if(!ok || !window.firestoreServices.length) return;
-
-  const host = document.getElementById("services");
-  if(!host) return;
-
-  const grid = host.querySelector(".grid");
-  if(!grid) return;
-  grid.innerHTML = "";
-
-  window.firestoreServices.forEach(s => {
-    const b = document.createElement("button");
-    b.innerHTML = `${s.icon || "📌"} ${s.name || "Service"}`;
-    b.onclick = () => showDynamicService(s);
-    grid.appendChild(b);
-  });
-}
-
-function showDynamicService(s){
-  window.currentService = s.name || "CSC સેવા";
-  add(s.name || "CSC સેવા", "user");
-  setTimeout(() => {
-    let response = `<b>${s.icon || "📌"} ${s.name || "CSC સેવા"}</b><br>`;
-    if(s.price !== undefined && s.price !== null && String(s.price).trim() !== "")
-      response += `<div class="price">💰 સેવા ચાર્જ: ₹${s.price}</div><br>`;
-    response += s.description || "";
-    if(Array.isArray(s.documents) && s.documents.length){
-      response += `<br><br><b>📋 જરૂરી દસ્તાવેજો:</b><ul class="docs">`;
-      s.documents.forEach(d => response += `<li>✅ ${d}</li>`);
-      response += `</ul>`;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>પાર્થ ઓનલાઈન CSC સેન્ટર - એપોઇન્ટમેન્ટ બુકિંગ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Noto Sans Gujarati', sans-serif;
+      background-color: #f1f5f9;
     }
-    if(s.note) response += `<br><span class="small">⚠️ ${s.note}</span>`;
+    @media print {
+      body * { visibility: hidden; }
+      #printPosterArea, #printPosterArea * { visibility: visible; }
+      #printPosterArea {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        box-shadow: none !important;
+        border: 3px solid #1e3a8a !important;
+      }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body class="text-slate-800 pb-12">
 
-    add(response);
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white shadow-lg sticky top-0 z-40">
+    <div class="max-w-3xl mx-auto px-4 py-3.5 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-3">
+        <div class="bg-white/15 p-2.5 rounded-xl border border-white/20 text-2xl">🏛️</div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="font-extrabold text-base sm:text-lg leading-tight">પાર્થ ઓનલાઈન CSC સેન્ટર</h1>
+            <span class="bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 text-[10px] px-2 py-0.5 rounded-full font-semibold">Digital Seva</span>
+          </div>
+          <p class="text-[11px] text-blue-200">Parth Online CSC Center • માંડવાબુઝર્ગ, અંકલેશ્વર</p>
+        </div>
+      </div>
 
-    const arr = [
-      ["📞 Call: 9904647651","call"],
-      ...(s.appointmentEnabled !== false ? [["📅 Appointment લો","appointment"]] : []),
-      ["💬 WhatsApp પર સંપર્ક કરો","whatsapp"]
-    ];
-    buttons(arr);
-  }, 200);
-}
+      <div class="flex items-center gap-2">
+        <button onclick="openAdminModal()" id="adminBtn" class="bg-white/15 hover:bg-white/25 border border-white/25 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1 transition">
+          <span>🔐</span> <span id="adminBtnText">માલિક</span>
+        </button>
+      </div>
+    </div>
 
-window.addEventListener("DOMContentLoaded", renderDynamicServices);
-</script>
+    <div class="bg-blue-950/60 border-t border-white/10 text-[11px] text-blue-100">
+      <div class="max-w-3xl mx-auto px-4 py-1.5 flex flex-wrap justify-between items-center gap-2">
+        <span>📍 માંડવાબુઝર્ગ, તા. અંકલેશ્વર, જિ. ભરૂચ</span>
+        <span class="flex items-center gap-2">
+          <span id="dbStatusBadge" class="inline-flex items-center gap-1 text-amber-300">● કનેક્ટ થઈ રહ્યું છે...</span>
+          <span>| 🕒 સવારે 9:00 થી સાંજે 7:00</span>
+        </span>
+      </div>
+    </div>
+  </header>
 
-</body>
-</html>
+  <!-- Main Container -->
+  <main class="max-w-3xl mx-auto px-3 sm:px-4 mt-4">
+
+    <!-- Navigation Tabs (Customer sees 2 tabs; Admin sees 3 tabs) -->
+    <div id="navTabsGrid" class="bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200 grid grid-cols-2 gap-1.5 mb-4">
+      <button onclick="switchTab('book')" id="tab-book" class="tab-btn bg-blue-700 text-white font-bold py-2.5 px-2 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm transition">
+        <span>📅</span> બુકિંગ ફોર્મ
+      </button>
+      <button onclick="switchTab('list')" id="tab-list" class="tab-btn text-slate-600 hover:bg-slate-100 font-bold py-2.5 px-2 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 transition">
+        <span>📋</span> <span id="listTabLabel">મારું બુકિંગ</span>
+        <span id="bookingCountBadge" class="bg-blue-100 text-blue-800 text-[11px] px-1.5 py-0.2 rounded-full font-extrabold">0</span>
+      </button>
+      <button onclick="switchTab('poster')" id="tab-poster" class="hidden tab-btn text-slate-600 hover:bg-slate-100 font-bold py-2.5 px-2 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 transition">
+        <span>📲</span> QR કોડ પોસ્ટર
+      </button>
+    </div>
+
+    <!-- ==================== TAB 1: BOOKING FORM ==================== -->
+    <section id="section-book" class="space-y-4">
+
+      <!-- Success Card -->
+      <div id="successCard" class="hidden bg-white rounded-2xl shadow-md border-2 border-emerald-500 p-5 text-center space-y-4">
+        <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mx-auto">✅</div>
+        <div>
+          <span class="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-3 py-1 rounded-full">એપોઇન્ટમેન્ટ કન્ફર્મ થઈ ગઈ છે</span>
+          <h2 class="text-xl font-extrabold text-slate-900 mt-2">ટોકન નંબર: <span id="confToken" class="text-blue-700">CSC-000</span></h2>
+          <p class="text-xs text-slate-500 mt-1">તમારું બુકિંગ લાઈવ રજિસ્ટરમાં સેવ થઈ ગયું છે.</p>
+        </div>
+
+        <div id="confSummary" class="bg-slate-50 rounded-xl p-3.5 text-left text-xs sm:text-sm space-y-1.5 border border-slate-200"></div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+          <a id="sendOwnerWaBtn" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow">
+            <span>📲</span> સેન્ટર માલિકને WhatsApp મોકલો
+          </a>
+          <a id="sendCustomerWaBtn" href="#" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow">
+            <span>🧾</span> ગ્રાહકના WhatsApp પર સ્લિપ મોકલો
+          </a>
+        </div>
+
+        <button onclick="resetForm()" class="text-xs text-slate-500 hover:text-blue-700 font-semibold underline pt-1">
+          + નવું બુકિંગ કરો
+        </button>
+      </div>
+
+      <!-- Booking Form -->
+      <form id="bookingForm" onsubmit="handleBookingSubmit(event)" class="space-y-4">
+
+        <!-- Step 1: Select Service -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5">
+          <div class="flex items-center gap-2.5 mb-3">
+            <span class="w-7 h-7 rounded-full bg-blue-700 text-white font-extrabold text-sm flex items-center justify-center">1</span>
+            <div>
+              <h2 class="font-extrabold text-base text-slate-900">સેવા પસંદ કરો <span class="text-xs font-normal text-slate-500">(Select Service)</span></h2>
+              <p class="text-xs text-slate-500">તમારે કયા કામ માટે એપોઇન્ટમેન્ટ જોઈએ છે તેના પર ક્લિક કરો</p>
+            </div>
+          </div>
+
+          <div id="servicesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+
+          <!-- Required Documents Box -->
+          <div class="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-3.5">
+            <h3 class="text-xs sm:text-sm font-extrabold text-amber-900 flex items-center gap-1.5">
+              <span>📑</span> જરૂરી ડોક્યુમેન્ટ્સ (Required Documents):
+            </h3>
+            <p class="text-[11px] text-amber-800 mt-0.5 mb-2">સેન્ટર પર આવતી વખતે નીચે મુજબના અસલ (Original) ડોક્યુમેન્ટ્સ સાથે લાવવા:</p>
+            <ul id="docsList" class="text-xs text-slate-800 space-y-1 font-medium"></ul>
+          </div>
+        </div>
+
+        <!-- Step 2: Select Date & Time -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5">
+          <div class="flex items-center gap-2.5 mb-3">
+            <span class="w-7 h-7 rounded-full bg-blue-700 text-white font-extrabold text-sm flex items-center justify-center">2</span>
+            <div>
+              <h2 class="font-extrabold text-base text-slate-900">તારીખ અને સમય પસંદ કરો <span class="text-xs font-normal text-slate-500">(Date & Time)</span></h2>
+              <p class="text-xs text-slate-500">તમારી અનુકૂળતા મુજબ તારીખ અને ખાલી ટાઈમ સ્લોટ પસંદ કરો</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">📅 તારીખ (Date) *</label>
+              <input type="date" id="bookingDate" required onchange="renderTimeSlots()" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none" />
+            </div>
+            <div class="bg-blue-50 border border-blue-200 rounded-xl px-3.5 py-2.5 flex items-center justify-between">
+              <span class="text-xs text-slate-600 font-semibold">પસંદ કરેલ સમય:</span>
+              <span id="selectedSlotDisplay" class="bg-blue-700 text-white text-xs font-extrabold px-3 py-1 rounded-lg">સમય પસંદ કરો</span>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-[11px] mb-2">
+            <span class="font-bold text-slate-600">ઉપલબ્ધ સમય (AVAILABLE SLOTS)</span>
+            <div class="flex items-center gap-3">
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full border border-slate-400 inline-block"></span> ખાલી</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-blue-700 inline-block"></span> પસંદ કરેલ</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-red-200 border border-red-400 inline-block"></span> બુક થયેલ</span>
+            </div>
+          </div>
+
+          <div id="slotsGrid" class="grid grid-cols-3 sm:grid-cols-5 gap-2"></div>
+        </div>
+
+        <!-- Step 3: Customer Details -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5">
+          <div class="flex items-center gap-2.5 mb-3">
+            <span class="w-7 h-7 rounded-full bg-blue-700 text-white font-extrabold text-sm flex items-center justify-center">3</span>
+            <div>
+              <h2 class="font-extrabold text-base text-slate-900">ગ્રાહકની વિગત <span class="text-xs font-normal text-slate-500">(Customer Details)</span></h2>
+              <p class="text-xs text-slate-500">WhatsApp પર એપોઇન્ટમેન્ટ સ્લિપ મેળવવા સાચી વિગત ભરો</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">પૂરું નામ (Full Name) *</label>
+              <input type="text" id="custName" required placeholder="દા.ત. રાજેશભાઈ પટેલ" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-600 outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">WhatsApp મોબાઈલ નંબર (10 અંક) *</label>
+              <input type="tel" id="custPhone" required pattern="[0-9]{10}" maxlength="10" placeholder="9876543210" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm font-bold focus:ring-2 focus:ring-blue-600 outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">ગામ / વિસ્તાર (Village / Area) *</label>
+              <input type="text" id="custVillage" required placeholder="દા.ત. માંડવાબુઝર્ગ, અંકલેશ્વર" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-600 outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">વધારાની વિગત (Optional Notes)</label>
+              <input type="text" id="custNotes" placeholder="દા.ત. આધારમાં મોબાઈલ નંબર લિંક કરવો છે" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-600 outline-none" />
+            </div>
+          </div>
+
+          <div class="mt-3 bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center justify-between gap-2">
+            <div>
+              <p class="text-xs font-extrabold text-emerald-900">💬 ડ્યુઅલ WhatsApp નોટિફિકેશન સિસ્ટમ</p>
+              <p class="text-[11px] text-emerald-800">બુકિંગ કરતા જ સેન્ટર માલિક (+91 9904647651) ના WhatsApp માં મેસેજ ખુલશે અને ગ્રાહકને સ્લિપ મોકલી શકાશે.</p>
+            </div>
+            <label class="inline-flex items-center cursor-pointer shrink-0">
+              <input type="checkbox" id="autoWaToggle" checked class="sr-only peer" />
+              <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600 relative"></div>
+            </label>
+          </div>
+
+          <button type="submit" id="submitBtn" class="mt-4 w-full bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-extrabold py-3.5 px-6 rounded-xl text-sm sm:text-base shadow-lg flex items-center justify-center gap-2 transition">
+            <span>✅</span> એપોઇન્ટમેન્ટ બુક કરો અને WhatsApp મોકલો
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ==================== TAB 2: BOOKING LIST ==================== -->
+    <section id="section-list" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 id="listHeading" class="font-extrabold text-base text-slate-900">મારા બુકિંગ (My Bookings)</h2>
+          <p id="listSubHeading" class="text-xs text-slate-500">આ મોબાઈલ પરથી કરેલા તમારા બુકિંગની વિગત</p>
+        </div>
+
+        <div id="adminControls" class="hidden flex flex-wrap items-center gap-2">
+          <input type="date" id="filterDate" onchange="renderBookingsList()" class="border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs font-bold" />
+          <button onclick="switchTab('poster')" class="bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg">
+            📲 QR પોસ્ટર
+          </button>
+          <button onclick="downloadCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg">
+            📥 Excel (CSV)
+          </button>
+          <button onclick="openChangePinModal()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg">
+            🔑 PIN બદલો
+          </button>
+          <button onclick="logoutAdmin()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-lg">
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <div id="bookingsContainer" class="space-y-3"></div>
+    </section>
+
+    <!-- ==================== TAB 3: QR CODE POSTER (ADMIN ONLY) ==================== -->
+    <section id="section-poster" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 flex flex-wrap items-center justify-between gap-2 no-print">
+        <div>
+          <h3 class="font-extrabold text-sm text-slate-900">દુકાન પર લગાવવા માટે QR કોડ પોસ્ટર (Admin Only)</h3>
+          <p class="text-xs text-slate-500">આ પોસ્ટર પ્રિન્ટ કરીને તમારા CSC સેન્ટરના કાઉન્ટર પર લગાવો.</p>
+        </div>
+        <button onclick="window.print()" class="bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow flex items-center gap-1.5">
+          <span>🖨️</span> પ્રિન્ટ પોસ્ટર (Print A4)
+        </button>
+      </div>
+
+      <div id="printPosterArea" class="bg-white rounded-3xl shadow-lg border-4 border-blue-900 p-6 sm:p-8 text-center max-w-lg mx-auto space-y-5">
+        <div class="bg-blue-900 text-white rounded-2xl py-4 px-4">
+          <p class="text-xs uppercase tracking-wider text-amber-300 font-bold">Digital Seva • Common Service Center</p>
+          <h2 class="text-2xl sm:text-3xl font-extrabold mt-1">પાર્થ ઓનલાઈન CSC સેન્ટર</h2>
+          <p class="text-xs text-blue-200 mt-1">માંડવાબુઝર્ગ, તા. અંકલેશ્વર, જિ. ભરૂચ</p>
+        </div>
+
+        <div class="space-y-1">
+          <span class="bg-amber-100 text-amber-900 text-xs font-extrabold px-3 py-1 rounded-full">લાઈનમાં ઊભા રહ્યા વગર કામ કરાવો!</span>
+          <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 pt-1">ઓનલાઈન એપોઇન્ટમેન્ટ બુક કરવા QR સ્કેન કરો</h3>
+        </div>
+
+        <div class="bg-slate-50 border-2 border-dashed border-blue-400 rounded-2xl p-5 inline-block mx-auto">
+          <div id="qrcode" class="flex justify-center"></div>
+        </div>
+
+        <p id="posterUrlText" class="text-xs font-mono text-blue-700 font-bold break-all"></p>
+
+        <div class="bg-blue-50 rounded-2xl p-4 text-left text-xs space-y-1.5 border border-blue-100">
+          <p class="font-extrabold text-blue-900">📌 ઉપલબ્ધ સેવાઓ:</p>
+          <p class="text-slate-700">• આધાર કાર્ડ સુધારો / નવું આધાર • આયુષ્માન કાર્ડ (PM-JAY)</p>
+          <p class="text-slate-700">• પાન કાર્ડ (PAN) • ચૂંટણી કાર્ડ • આવક / જાતિનો દાખલો</p>
+          <p class="text-slate-700">• રેશન કાર્ડ e-KYC • પાસપોર્ટ / RTO / ઓનલાઈન ફોર્મ</p>
+        </div>
+
+        <div class="border-t border-slate-200 pt-3 flex justify-between items-center text-xs font-bold text-slate-700">
+          <span>📞 WhatsApp: +91 9904647651</span>
+          <span>🕒 સવારે 9:00 થી સાંજે 7:00</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Admin PIN Login Modal -->
+  <div id="adminModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 class="font-extrabold text-base text-slate-900">🔐 સેન્ટર માલિક લોગિન</h3>
+        <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-700 text-xl font-bold">&times;</button>
+      </div>
+      <p class="text-xs text-slate-600">તમામ ગ્રાહકોનું લાઈવ બુકિંગ લિસ્ટ અને QR પોસ્ટર જોવા માટે તમારો એડમિન PIN નાખો:</p>
+      <input type="password" id="adminPinInput" inputmode="numeric" maxlength="6" placeholder="••••" onkeyup="if(event.key==='Enter') verifyAdminPin()" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-center text-xl font-extrabold tracking-widest focus:ring-2 focus:ring-blue-600 outline-none" />
+      <div class="flex gap-2">
+        <button onclick="closeAdminModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs">રદ કરો</button>
+        <button onclick="verifyAdminPin()" class="flex-1 bg-blue-700 hover:bg-blue-800 text-white font-bold py-2.5 rounded-xl text-xs">લોગિન કરો</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Admin PIN Modal -->
+  <div id="changePinModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 class="font-extrabold text-base text-slate-900">🔑 નવો એડમિન PIN સેટ કરો</h3>
+        <button onclick="closeChangePinModal()" class="text-slate-400 hover:text-slate-700 text-xl font-bold">&times;</button>
+      </div>
+      <p class="text-xs text-slate-600">આ PIN સીધો Firebase માં સેવ થશે અને બધા ડિવાઇસમાં લાગુ પડશે (4 થી 6 અંક):</p>
+      <div class="space-y-2.5">
+        <input type="password" id="newPinInput" inputmode="numeric" maxlength="6" placeholder="નવો PIN નાખો (4-6 અંક)" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-center text-lg font-extrabold tracking-widest focus:ring-2 focus:ring-blue-600 outline-none" />
+        <input type="password" id="confirmNewPinInput" inputmode="numeric" maxlength="6" placeholder="નવો PIN ફરીથી નાખો" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-center text-lg font-extrabold tracking-widest focus:ring-2 focus:ring-blue-600 outline-none" />
+      </div>
+      <div class="flex gap-2">
+        <button onclick="closeChangePinModal()" class="flex-1 bg-slate-100 hover:b
